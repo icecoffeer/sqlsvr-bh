@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[VDRClearDtl]
+(
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[Line] [int] NOT NULL,
+[PayAdjNum] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[VDRClearDtl] ADD CONSTRAINT [PK__VDRClearDtl__33BFA6FF] PRIMARY KEY CLUSTERED  ([NUM], [Line], [PayAdjNum]) WITH (FILLFACTOR=90) ON [PRIMARY]
+GO

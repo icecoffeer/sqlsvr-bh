@@ -1,0 +1,8 @@
+CREATE TABLE [dbo].[posgrpt]
+(
+[NO] [int] NOT NULL,
+[NAME] [char] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[PRIVATEPATH] [char] (50) COLLATE Chinese_PRC_CI_AS NULL,
+[SQLWHERE] [char] (255) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

@@ -1,0 +1,14 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+create procedure [dbo].[GENBCKEXPFEE](
+  @VDRGID int, 
+  @CALCDATE datetime
+)
+as
+begin
+  update BCKEXPFEE set EXPDAYS = floor(convert(float, @CALCDATE - FILDATE)) where VDRGID = @VDRGID and EXPAMT > PROCAMT
+  update BCKEXPFEE set EXPPAYAMT = (EXPAMT - PROCAMT) * EXPRATE * EXPDAYS where VDRGID = @VDRGID and EXPAMT > PROCAMT
+end
+GO

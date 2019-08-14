@@ -1,0 +1,27 @@
+SET QUOTED_IDENTIFIER OFF
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[REVERSESTR]
+(
+  @STR VARCHAR(255) OUTPUT
+)
+AS
+BEGIN
+  DECLARE
+    @I INT,
+    @LEN INT,
+    @T CHAR(1)
+
+  SET @LEN = LEN(@STR)
+  SET @I = 1
+  WHILE @I <= (@LEN / 2)
+  BEGIN
+    SET @T = SUBSTRING(@STR, @I, 1)
+    SET @STR = STUFF(@STR, @I, 1, SUBSTRING(@STR, @LEN - @I + 1, 1))
+    SET @STR = STUFF(@STR, @LEN - @I + 1, 1, @T)
+    SET @I = @I + 1
+  END
+  SET @STR = @STR
+END
+GO

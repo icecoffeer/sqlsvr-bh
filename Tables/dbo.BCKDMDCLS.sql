@@ -1,0 +1,5 @@
+CREATE TABLE [dbo].[BCKDMDCLS]
+(
+[CLS] [varchar] (30) COLLATE Chinese_PRC_CI_AS NOT NULL
+) ON [PRIMARY]
+GO

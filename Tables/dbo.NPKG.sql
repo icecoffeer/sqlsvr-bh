@@ -1,0 +1,18 @@
+CREATE TABLE [dbo].[NPKG]
+(
+[SRC] [int] NOT NULL,
+[ID] [int] NOT NULL IDENTITY(1, 1),
+[PGID] [int] NULL,
+[EGID] [int] NULL,
+[QTY] [money] NULL,
+[RCV] [int] NULL,
+[RCVTIME] [datetime] NULL,
+[FRCUPD] [smallint] NULL,
+[TYPE] [smallint] NULL,
+[NSTAT] [smallint] NULL,
+[NNOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[TEAMID] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NPKG] ADD CONSTRAINT [PK__NPKG__3E723F9C] PRIMARY KEY CLUSTERED  ([SRC], [ID]) WITH (FILLFACTOR=90) ON [PRIMARY]
+GO

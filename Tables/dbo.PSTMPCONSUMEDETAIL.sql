@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[PSTMPCONSUMEDETAIL]
+(
+[spid] [int] NOT NULL,
+[UUID] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[GDGID] [int] NULL,
+[AMOUNT] [decimal] (24, 2) NULL,
+[QTY] [decimal] (24, 4) NULL,
+[SORT] [varchar] (50) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [idx_PSTMPCONSUMEDETAIL_spid] ON [dbo].[PSTMPCONSUMEDETAIL] ([spid]) ON [PRIMARY]
+GO

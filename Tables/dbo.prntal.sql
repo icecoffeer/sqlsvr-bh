@@ -1,0 +1,30 @@
+CREATE TABLE [dbo].[prntal]
+(
+[code] [char] (13) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[name] [char] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[spec] [char] (40) COLLATE Chinese_PRC_CI_AS NULL,
+[munit] [char] (6) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[sort] [char] (13) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[rtlprc] [money] NOT NULL,
+[mbrprc] [money] NULL,
+[cxmbrprc] [money] NULL,
+[qpc] [money] NOT NULL,
+[alc] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[vcode] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[vname] [char] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[origin] [char] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[grade] [char] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[mcode] [char] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[code2] [char] (13) COLLATE Chinese_PRC_CI_AS NULL,
+[lowinv] [money] NULL,
+[highinv] [money] NULL,
+[prmprc] [money] NOT NULL,
+[begindate] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[enddate] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[eontime] [datetime] NULL,
+[wjy] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[cls] [char] (12) COLLATE Chinese_PRC_CI_AS NULL,
+[num] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[prm] [char] (10) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

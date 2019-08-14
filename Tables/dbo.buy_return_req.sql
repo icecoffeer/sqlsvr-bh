@@ -1,0 +1,40 @@
+CREATE TABLE [dbo].[buy_return_req]
+(
+[uuid] [varchar] (38) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[lastModifier] [varchar] (64) COLLATE Chinese_PRC_CI_AS NULL,
+[lastModifierID] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[lastModifierNS] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[lastModified] [datetime] NULL,
+[fversion] [int] NOT NULL,
+[bill_number] [varchar] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[checkor] [varchar] (64) COLLATE Chinese_PRC_CI_AS NULL,
+[checkID] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[checkNS] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[checked] [datetime] NULL,
+[creator] [varchar] (64) COLLATE Chinese_PRC_CI_AS NULL,
+[creatorID] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[creatorNS] [varchar] (32) COLLATE Chinese_PRC_CI_AS NULL,
+[created] [datetime] NULL,
+[orgCode] [varchar] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[orgName] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[orgUuid] [varchar] (38) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[remark] [varchar] (255) COLLATE Chinese_PRC_CI_AS NULL,
+[amount] [numeric] (19, 4) NULL,
+[card_code] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[contact] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[flow_no] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[handle_suggestion] [varchar] (255) COLLATE Chinese_PRC_CI_AS NULL,
+[member_id] [varchar] (38) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[pos_no] [varchar] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[req_date] [datetime] NULL,
+[returnable_amount] [numeric] (19, 4) NULL,
+[state] [varchar] (30) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[consume_date] [datetime] NULL,
+[store_contact] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[store_code] [varchar] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[store_gid] [varchar] (12) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[single] [tinyint] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[buy_return_req] ADD CONSTRAINT [PK__buy_retu__7F42793052645B7A] PRIMARY KEY CLUSTERED  ([uuid]) ON [PRIMARY]
+GO

@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[CodeOrg]
+(
+[Code] [char] (6) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[Name] [char] (12) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

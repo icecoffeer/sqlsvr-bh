@@ -1,0 +1,31 @@
+CREATE TABLE [dbo].[ICPAY]
+(
+[Num] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[Cls] [varchar] (4) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[PAYTYPE] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[Amt] [decimal] (24, 2) NOT NULL,
+[Total] [decimal] (24, 2) NOT NULL,
+[SELLER] [char] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[RECEIVER] [char] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[STAT] [smallint] NOT NULL,
+[NOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[CARDTIME] [datetime] NULL,
+[PAYTIME] [datetime] NULL,
+[PRNTIME] [datetime] NULL,
+[LSTUPDTIME] [datetime] NOT NULL,
+[STORE] [int] NULL,
+[SUBSTORE] [varchar] (50) COLLATE Chinese_PRC_CI_AS NULL,
+[GROUPBUYNUM] [varchar] (50) COLLATE Chinese_PRC_CI_AS NULL,
+[MODIFIER] [char] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[FILLER] [char] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[FILDATE] [datetime] NULL,
+[CHECKER] [char] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[CHKDATE] [datetime] NULL,
+[SRC] [int] NULL,
+[BUYER] [varchar] (80) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[ICPAY] ADD CONSTRAINT [PK__ICPAY__5DC3FB1F] PRIMARY KEY CLUSTERED  ([Num]) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IDX_ICPAY_GROUPBUYNUM] ON [dbo].[ICPAY] ([GROUPBUYNUM]) WITH (FILLFACTOR=90) ON [PRIMARY]
+GO

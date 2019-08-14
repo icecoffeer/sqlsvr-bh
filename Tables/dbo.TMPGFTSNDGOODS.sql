@@ -1,0 +1,10 @@
+CREATE TABLE [dbo].[TMPGFTSNDGOODS]
+(
+[spid] [int] NOT NULL,
+[GDGID] [int] NULL,
+[QTY] [decimal] (24, 2) NULL,
+[AMT] [decimal] (24, 2) NULL
+) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [idx_TMPGFTSNDGOODS_spid] ON [dbo].[TMPGFTSNDGOODS] ([spid]) ON [PRIMARY]
+GO

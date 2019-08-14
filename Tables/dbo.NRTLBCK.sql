@@ -1,0 +1,34 @@
+CREATE TABLE [dbo].[NRTLBCK]
+(
+[PRNTIME] [datetime] NULL,
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[SETTLENO] [int] NOT NULL,
+[FILDATE] [datetime] NOT NULL,
+[STAT] [smallint] NOT NULL CONSTRAINT [DF__NRTLBCK__STAT__6D1C189F] DEFAULT (0),
+[TOTAL] [decimal] (24, 4) NOT NULL,
+[FILLER] [int] NOT NULL,
+[WRH] [int] NOT NULL,
+[MODNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[INVNO] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[NOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[RECCNT] [int] NOT NULL,
+[CHECKER] [int] NULL,
+[TAX] [decimal] (24, 4) NOT NULL,
+[DSPWRH] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[PROVIDER] [int] NOT NULL,
+[ASSISTANT] [int] NULL,
+[SRCNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[SRC] [int] NOT NULL,
+[SNDDATE] [datetime] NULL,
+[ID] [int] NOT NULL,
+[RCV] [int] NOT NULL,
+[RCVTIME] [datetime] NULL,
+[NTYPE] [smallint] NOT NULL,
+[NSTAT] [smallint] NOT NULL,
+[NNOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[GFTPRO] [int] NULL,
+[GFTPROWRH] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NRTLBCK] ADD CONSTRAINT [PK__NRTLBCK__6E103CD8] PRIMARY KEY CLUSTERED  ([ID], [SRC]) ON [PRIMARY]
+GO

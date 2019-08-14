@@ -1,0 +1,17 @@
+CREATE TABLE [dbo].[NSORT]
+(
+[SRC] [int] NOT NULL,
+[ID] [int] NOT NULL,
+[CODE] [char] (13) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[NAME] [char] (36) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[RCV] [int] NOT NULL,
+[RCVTIME] [datetime] NULL,
+[FRCUPD] [smallint] NOT NULL,
+[TYPE] [smallint] NOT NULL,
+[NSTAT] [smallint] NOT NULL,
+[NNOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[FLAG] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NSORT] ADD CONSTRAINT [PK__NSORT__7068F456] PRIMARY KEY CLUSTERED  ([SRC], [ID]) ON [PRIMARY]
+GO

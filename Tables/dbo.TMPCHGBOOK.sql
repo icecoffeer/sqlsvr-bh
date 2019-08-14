@@ -1,0 +1,32 @@
+CREATE TABLE [dbo].[TMPCHGBOOK]
+(
+[spid] [int] NOT NULL,
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NULL,
+[VDRGID] [int] NULL,
+[VDRCODE] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[VDRNAME] [char] (80) COLLATE Chinese_PRC_CI_AS NULL,
+[BILLTO] [int] NULL,
+[BILCODE] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[BILNAME] [char] (80) COLLATE Chinese_PRC_CI_AS NULL,
+[OCRDATE] [datetime] NULL,
+[PAYDATE] [datetime] NULL,
+[CNTRNUM] [char] (14) COLLATE Chinese_PRC_CI_AS NULL,
+[CNTRVERSION] [int] NULL,
+[CHGCODE] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[CALCBEGIN] [datetime] NULL,
+[CALCEND] [datetime] NULL,
+[CALCTOTAL] [decimal] (24, 2) NULL,
+[CALCRATE] [decimal] (24, 2) NULL,
+[SHOULDAMT] [decimal] (24, 2) NULL,
+[REALAMT] [decimal] (24, 2) NULL,
+[SRCNUM] [char] (14) COLLATE Chinese_PRC_CI_AS NULL,
+[SRCCLS] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[DEPT] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[PAYDIRECT] [smallint] NULL,
+[PSR] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[NOTE] [char] (3500) COLLATE Chinese_PRC_CI_AS NULL,
+[GATHERINGMODE] [char] (10) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [idx_TMPCHGBOOK_spid] ON [dbo].[TMPCHGBOOK] ([spid]) ON [PRIMARY]
+GO

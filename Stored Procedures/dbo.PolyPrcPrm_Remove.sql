@@ -1,0 +1,25 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+create procedure [dbo].[PolyPrcPrm_Remove](
+  @Num char(14),
+  @Msg varchar(255) output
+)
+as
+begin
+  declare
+    @return_status smallint,
+    @Stat int
+  select @Stat = STAT from POLYPRCPRM(nolock) where NUM = @Num
+  if @Stat <> 0
+  begin
+    set @Msg = '不是未审核的单据，不能删除。'
+    return 1
+  end
+  exec @return_status = PolyPrcPrm_DoRemove @Num, @Msg output
+  if @return_status = 0
+    delete from POLYPRCPRMLOG where NUM = @Num
+  return 0
+end
+GO

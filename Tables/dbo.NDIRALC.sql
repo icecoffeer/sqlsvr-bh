@@ -1,0 +1,44 @@
+CREATE TABLE [dbo].[NDIRALC]
+(
+[ID] [int] NOT NULL,
+[CLS] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[VENDOR] [int] NULL,
+[SENDER] [int] NULL,
+[RECEIVER] [int] NULL,
+[OCRDATE] [datetime] NULL,
+[PSR] [int] NULL,
+[TOTAL] [money] NULL,
+[TAX] [money] NULL,
+[ALCTOTAL] [money] NULL,
+[STAT] [smallint] NULL,
+[RECCNT] [int] NULL,
+[CHECKER] [int] NULL,
+[MODNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[VENDORNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[FILDATE] [datetime] NULL,
+[NSTAT] [smallint] NULL,
+[NOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[NNOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[SRC] [int] NOT NULL,
+[RCV] [int] NULL,
+[SNDTIME] [datetime] NULL,
+[RCVTIME] [datetime] NULL,
+[FRCCHK] [smallint] NULL,
+[TYPE] [smallint] NULL,
+[ORDNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[OUTTAX] [money] NOT NULL CONSTRAINT [DF__ndiralc__OUTTAX__0022696D] DEFAULT (0),
+[SRCORDNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[PAYDATE] [datetime] NULL,
+[SRCORDCLS] [char] (4) COLLATE Chinese_PRC_CI_AS NULL,
+[FROMNUM] [char] (14) COLLATE Chinese_PRC_CI_AS NULL,
+[FROMCLS] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[VERIFIER] [int] NULL,
+[TAXRATELMT] [money] NULL,
+[DEPT] [varchar] (13) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NDIRALC] ADD CONSTRAINT [PK__NDIRALC__1E05700A] PRIMARY KEY CLUSTERED  ([SRC], [ID]) WITH (FILLFACTOR=90) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IDX_NDIRALC_TYPE] ON [dbo].[NDIRALC] ([TYPE]) ON [PRIMARY]
+GO

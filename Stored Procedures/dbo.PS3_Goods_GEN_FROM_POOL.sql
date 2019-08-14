@@ -1,0 +1,224 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[PS3_Goods_GEN_FROM_POOL]    
+(    
+  @ID integer,    
+  @poErrMsg VARCHAR(255) OUTPUT,    
+  @SucCount integer OUTPUT    
+)    
+AS    
+BEGIN    
+  DECLARE    
+    @GDGID VARCHAR(30),    
+    --@GOODNAME VARCHAR(30),    
+    @CODE VARCHAR(20),    
+    @CODE1 VARCHAR(20),    
+    @CODE2 VARCHAR(20),    
+    @CODEOUT1 VARCHAR(20),    
+    @CODEOUT2 VARCHAR(20),    
+    @STARTCODE VARCHAR(20),    
+    @GENCUSTOMFLOWCODE INT,    
+    @USERGID INT,    
+    --@GenFlowCodeType INT,    
+    @FILLER INT,    
+    @FILLERCODE VARCHAR(20),    
+    @FILLERNAME VARCHAR(50),    
+    @ErrMsg VARCHAR(255),    
+    --取临时表字段    
+    @GDNAME VARCHAR(50),    
+    @SPEC VARCHAR(40),    
+    @SORT VARCHAR(13),    
+    @RTLPRC MONEY,    
+    @TAXRATE MONEY, 
+    @SALETAX MONEY,   
+    @PRCTYPE INT,    
+    @GDSALE INT,    
+    @MUNIT VARCHAR(6),    
+    @QPC MONEY,    
+    @MCODE VARCHAR(20),    
+    @PAYRATE MONEY,    
+    @BILLTOGID INT,    
+    @DXPRC MONEY,    
+    @PSR INT,    
+    @DEPT VARCHAR(64),    
+    @ALC VARCHAR(10),    
+    @ACODE2 VARCHAR(40),    
+    @CNTINPRC MONEY,    
+    @ALCQTY MONEY,    
+    @BRAND VARCHAR(40),    
+    --zz 090824    
+    @MBRPRC MONEY,    
+    @TJCODE VARCHAR(20),    
+    @ORIGIN VARCHAR(20),    
+    /*2010.11.09  Edited By Wangjun 增加 货架，等级2 字段的excel导入*/    
+    @GRADE VARCHAR(20),    
+    @F2 VARCHAR(64),    
+    @OPT_AUTONEWBRAND INT,    
+    @NEWBRACODE VARCHAR(10),    
+    @CustomCode VARCHAR(20), --自定义代码    
+    @SHOPNO CHAR(30),  
+    --@TAXSORTPROVINCE VARCHAR(32),    --税务省份  
+    @TAXSORTCODE     VARCHAR(20),    --税务分类码  
+    @TAXSORT         int,            --税务分类ID 
+    @GPR             decimal(13,4)    --毛利率        
+    
+  SET @SucCount = 0    
+  SELECT @USERGID = USERGID FROM SYSTEM(NOLOCK)    
+    
+  SET @FILLERCODE = RTRIM(SUBSTRING(SUSER_SNAME(), CHARINDEX('_', SUSER_SNAME()) + 1, 20))    
+  SELECT @FILLER = GID, @FILLERNAME = RTRIM(NAME) + '[' + RTRIM(CODE) + ']' FROM EMPLOYEE(NOLOCK) WHERE CODE LIKE @FILLERCODE    
+  IF @FILLER IS NULL SET @FILLER = 1    
+    
+  EXEC OPTREADSTR 8054, 'STARTCODE', '', @STARTCODE OUTPUT    
+  EXEC OPTREADINT 10, 'GENCUSTOMFLOWCODE', 0, @GENCUSTOMFLOWCODE OUTPUT    
+  EXEC OPTREADINT 8054, 'AutoNewBrand', 0, @OPT_AUTONEWBRAND OUTPUT    
+    
+  DECLARE C_C CURSOR FOR    
+    SELECT GDNAME, SPEC, SORT, RTLPRC, TAXRATE, PRCTYPE, GDSALE, MUNIT, QPC, MCODE, PAYRATE,    
+      BILLTOGID, DXPRC, PSR, DEPT, ALC, CODE2, CNTINPRC, ALCQTY, BRAND, MBRPRC, TJCODE, ORIGIN, GRADE, F2, CustomCode,    
+      SHOPNO, TAXSORTCODE, SALETAX, GPR     
+    FROM TmpGoods(NOLOCK) where spid = @ID order by ID    
+  OPEN C_C    
+  FETCH NEXT FROM C_C INTO @GDNAME, @SPEC, @SORT, @RTLPRC, @TAXRATE, @PRCTYPE, @GDSALE, @MUNIT, @QPC, @MCODE, @PAYRATE,    
+      @BILLTOGID, @DXPRC, @PSR, @DEPT, @ALC, @ACODE2, @CNTINPRC, @ALCQTY, @BRAND, @MBRPRC, @TJCODE, @ORIGIN, @GRADE, @F2, @CustomCode,    
+      @SHOPNO, @TAXSORTCODE, @SALETAX, @GPR    
+  WHILE @@FETCH_STATUS=0    
+  BEGIN    
+    IF (LTRIM(RTRIM(@MCODE)) <> 'NULL') AND (LTRIM(RTRIM(@MCODE)) <> '')    
+    BEGIN    
+      IF EXISTS(SELECT 1 FROM GOODSH(NOLOCK) WHERE UPPER(MCODE) = UPPER(@MCODE) AND BILLTO = @BILLTOGID)    
+      BEGIN    
+        SET @ErrMsg = '导入商品 ' + rtrim(@GDNAME) + '的厂方货号:' + '[' + rtrim(@MCODE) + ']' + '已经存在，不能插入。'    
+        EXEC WRITEBATGOODSLOG @GDNAME, @FILLERNAME, @ErrMsg    
+        SET @poErrMsg = '存在跳过商品'    
+    
+        FETCH NEXT FROM C_C INTO @GDNAME, @SPEC, @SORT, @RTLPRC, @TAXRATE, @PRCTYPE, @GDSALE, @MUNIT, @QPC, @MCODE, @PAYRATE,    
+          @BILLTOGID, @DXPRC, @PSR, @DEPT, @ALC, @ACODE2, @CNTINPRC, @ALCQTY, @BRAND, @MBRPRC, @TJCODE, @ORIGIN, @GRADE, @F2, @CustomCode,    
+          @SHOPNO, @TAXSORTCODE, @SALETAX, @GPR    
+        CONTINUE    
+      END    
+    END    
+    
+    SET @CODE = @SORT    
+    EXEC GETGDGID @GDGID OUTPUT    
+    
+    IF @CustomCode <> ''    
+      SET @CODE = LTRIM(RTRIM(@CustomCode))    
+    ELSE    
+    BEGIN    
+      IF @STARTCODE = ''    
+      BEGIN    
+        SET @CODE = LTRIM(RTRIM(@CODE))    
+        SET @CODE = SUBSTRING(@CODE, 1, 2)    
+      END ELSE    
+        SET @CODE = LTRIM(RTRIM(@STARTCODE))    
+    
+      SET @CODE1 = @CODE    
+      SET @CODE2 = @CODE    
+    
+      IF @GENCUSTOMFLOWCODE = 1    
+      BEGIN    
+          EXEC GENFLOWCODEEXMIN @CODE1, 'GDINPUT', @CODEOUT1 OUTPUT, @poErrMsg OUTPUT    
+          EXEC GENFLOWCODEEXMIN @CODE2, 'GOODSH', @CODEOUT2 OUTPUT, @poErrMsg OUTPUT    
+          SET @CODE1 = @CODEOUT1    
+          SET @CODE2 = @CODEOUT2     
+      END ELSE BEGIN    
+        EXEC GENFLOWCODEEX @CODE1 OUTPUT, 'GDINPUT'    
+        EXEC GENFLOWCODEEX @CODE2 OUTPUT, 'GOODSH'    
+      END    
+      IF @CODE1 > @CODE2    
+        SET @CODE = @CODE1    
+      ELSE    
+        SET @CODE = @CODE2    
+      EXEC CHECKBARCODEEX @CODE OUTPUT    
+    END    
+    
+    IF EXISTS( SELECT 1 FROM GDINPUT(NOLOCK) WHERE CODE = @CODE)    
+    BEGIN     
+      SET @ErrMsg = '导入商品 ' + rtrim(@GDNAME) /*+ '[' + rtrim(@CODE) + ']*/ + '的代码已经存在，不能插入。'    
+      EXEC WRITEBATGOODSLOG @GDNAME, @FILLERNAME, @ErrMsg    
+      SET @poErrMsg = '存在跳过商品'    
+    
+      FETCH NEXT FROM C_C INTO @GDNAME, @SPEC, @SORT, @RTLPRC, @TAXRATE, @PRCTYPE, @GDSALE, @MUNIT, @QPC, @MCODE, @PAYRATE,    
+        @BILLTOGID, @DXPRC, @PSR, @DEPT, @ALC, @ACODE2, @CNTINPRC, @ALCQTY, @BRAND, @MBRPRC, @TJCODE, @ORIGIN, @GRADE, @F2, @CustomCode,    
+        @SHOPNO, @TAXSORTCODE, @SALETAX, @GPR     
+      CONTINUE    
+    END    
+    
+    IF (LTRIM(RTRIM(@ACODE2)) <> 'NULL') AND (LTRIM(RTRIM(@ACODE2)) <> '')    
+    BEGIN    
+      IF EXISTS(SELECT 1 FROM GDINPUT(NOLOCK) WHERE CODE = @ACODE2)    
+      BEGIN    
+        --SELECT @GOODNAME = RTRIM(Name) FROM GOODSH(NOLOCK) WHERE CODE = @CODE    
+        SET @ErrMsg = '导入商品 ' + rtrim(@GDNAME) /*+ '[' + rtrim(@CODE) + ']*/ + ' 的第二代码:' + '[' + rtrim(@ACODE2) + ']' + '已经存在。'    
+        EXEC WRITEBATGOODSLOG @GDNAME, @FILLERNAME, @ErrMsg    
+        SET @poErrMsg = '存在第二代码写入失败的商品'    
+    
+        FETCH NEXT FROM C_C INTO @GDNAME, @SPEC, @SORT, @RTLPRC, @TAXRATE, @PRCTYPE, @GDSALE, @MUNIT, @QPC, @MCODE, @PAYRATE,    
+          @BILLTOGID, @DXPRC, @PSR, @DEPT, @ALC, @ACODE2, @CNTINPRC, @ALCQTY, @BRAND, @MBRPRC, @TJCODE, @ORIGIN, @GRADE, @F2, @CustomCode,    
+          @SHOPNO, @TAXSORTCODE, @SALETAX, @GPR    
+        CONTINUE    
+      END    
+    END    
+    
+    --zz 是否自动新增不存在的品牌 090828    
+    IF @OPT_AUTONEWBRAND = 1    
+    BEGIN    
+      IF NOT EXISTS(SELECT 1 FROM BRAND WHERE NAME = @BRAND)    
+      BEGIN    
+        EXEC PS3_GETBRANDCODE @NEWBRACODE OUTPUT, @ErrMsg OUTPUT    
+        IF @@ERROR <> 0 SET @ErrMsg = '新增品牌代码计算失败'    
+    
+        INSERT INTO BRAND(CODE, NAME, AREA, CREATOR, CREATETIME, LSTUPDOPER, LSTUPDTIME)    
+        VALUES (@NEWBRACODE, @BRAND, 1, '未知[-]', GETDATE(), '未知[-]', GETDATE())    
+    
+      END ELSE    
+      BEGIN    
+        SELECT TOP 1 @NEWBRACODE = CODE FROM BRAND WHERE NAME = @BRAND    
+      END    
+    
+      SET @BRAND = @NEWBRACODE    
+    END    
+      
+    Set @TAXSORT = NULL  
+    Select @TAXSORT = GID from TAXSORT where CODE = @TAXSORTCODE  
+    
+    INSERT INTO GOODS (GID, CODE, NAME, SPEC, SORT, RTLPRC, INPRC,    
+      TAXRATE, PRCTYPE, SALE, LWTRTLPRC, WHSPRC, ACNT, PAYTODTL, MUNIT,    
+      QPC, TM, MANUFACTOR, MCODE, GPR, VALIDPERIOD,    
+      CHKVD, PAYRATE, BILLTO, DXPRC, MEMO, PROMOTE,    
+      LSTINPRC, GFT, AUTOORD, ORIGIN, GRADE, MBRPRC, SALETAX, PSR, F1, F2, F3, ALC, CODE2, MKTINPRC,    
+      MKTRTLPRC, CNTINPRC, ALCQTY, BRAND, BQtyPrc, KEEPTYPE,    
+      NENDTIME, NCANPAY, SSSTART, SSEND, SEASON, HQCONTROL,    
+      ORDCYCLE, ALCCTR, ISDISP, ISPKG, LOWINV, HIGHINV, OLDINVPRC,    
+      SRC, INVPRC, SNDTIME, LSTUPDTIME, ISLTD, FILLER, MODIFIER,    
+      ISBIND, CREATEDATE, WRH, TJCODE, SHOPNO, TAXSORT, TAXSORTCODE)    
+      VALUES(@GDGID, @CODE, @GDNAME, @SPEC, @SORT, @RTLPRC, 0,    
+      @TAXRATE, @PRCTYPE, @GDSALE, NULL, 0, 1, 0, @MUNIT,    
+      @QPC, NULL, NULL, @MCODE, @GPR, NULL,    
+      0, @PAYRATE, @BILLTOGID, @DXPRC, NULL, -1, 
+      0, 0, 0, @ORIGIN, @GRADE, @MBRPRC, @SALETAX, @PSR, @DEPT, @F2, NULL, @ALC, @ACODE2, NULL, 
+      NULL, @CNTINPRC, @ALCQTY, @BRAND, NULL, 0,          
+      NULL, 0, NULL, NULL, NULL, 0, 
+      NULL, NULL, 1, 0, 0, 0, 0, 
+      @USERGID, 0, NULL, GETDATE(), 0, @FILLER, @FILLER, 
+      0, GETDATE(), 1, @TJCODE, @SHOPNO, @TAXSORT, @TAXSORTCODE)    
+    
+    IF (LTRIM(RTRIM(@ACODE2)) <> 'NULL') AND (LTRIM(RTRIM(@ACODE2)) <> '')    
+    BEGIN    
+      INSERT INTO GDINPUT (CODE, GID, CODETYPE)    
+        VALUES(@ACODE2, @GDGID, 0)    
+    END    
+    
+    SET @SucCount = @SucCount + 1    
+    
+    FETCH NEXT FROM C_C INTO @GDNAME, @SPEC, @SORT, @RTLPRC, @TAXRATE, @PRCTYPE, @GDSALE, @MUNIT, @QPC, @MCODE, @PAYRATE,    
+      @BILLTOGID, @DXPRC, @PSR, @DEPT, @ALC, @ACODE2, @CNTINPRC, @ALCQTY, @BRAND, @MBRPRC, @TJCODE, @ORIGIN, @GRADE, @F2, @CustomCode,    
+      @SHOPNO, @TAXSORTCODE, @SALETAX, @GPR     
+  END    
+  CLOSE C_C    
+  DEALLOCATE C_C
+END         
+GO

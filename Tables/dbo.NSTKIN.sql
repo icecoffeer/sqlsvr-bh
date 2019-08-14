@@ -1,0 +1,33 @@
+CREATE TABLE [dbo].[NSTKIN]
+(
+[ID] [int] NOT NULL,
+[CLS] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[ORDNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[VENDOR] [int] NULL,
+[VENDORNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[BILLTO] [int] NULL,
+[OCRDATE] [datetime] NULL,
+[TOTAL] [money] NULL,
+[TAX] [money] NULL,
+[PAYDATE] [datetime] NULL,
+[FILDATE] [datetime] NULL,
+[CHECKER] [int] NULL,
+[STAT] [smallint] NULL,
+[MODNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[RECCNT] [int] NULL,
+[NSTAT] [smallint] NULL,
+[NOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[NNOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[SRC] [int] NOT NULL,
+[RCV] [int] NULL,
+[SNDTIME] [datetime] NULL,
+[RCVTIME] [datetime] NULL,
+[FRCCHK] [smallint] NULL,
+[TYPE] [smallint] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NSTKIN] ADD CONSTRAINT [PK__NSTKIN__4AD81681] PRIMARY KEY CLUSTERED  ([SRC], [ID]) WITH (FILLFACTOR=90) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IDX_NSTKIN_TYPE] ON [dbo].[NSTKIN] ([TYPE]) ON [PRIMARY]
+GO

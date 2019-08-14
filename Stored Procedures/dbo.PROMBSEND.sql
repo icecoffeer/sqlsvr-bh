@@ -1,0 +1,49 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[PROMBSEND]
+(	
+	@NUM	 VARCHAR(14),
+	@CLS	 VARCHAR(10),
+	@OPER	  VARCHAR(30),
+	@TOSTAT  int,
+	@MSG  VARCHAR(255) OUTPUT
+)
+AS
+BEGIN
+    DECLARE
+	@VRET INT,
+	@VSTORE INT,
+	@VSTAT	INT,
+	@StoreGid int
+	
+	set @VRET = 0;
+	select @VSTORE = USERGID FROM SYSTEM
+	
+	SELECT @VSTAT = STAT FROM PROMB WHERE NUM = @NUM
+		IF @VSTAT = 0 
+		  BEGIN
+			SET @MSG = '未审核单据不能发送';
+			RETURN(1);
+		  END
+    DECLARE
+	Cur_PrombSnd CURSOR FOR 
+	SELECT GID FROM PROMBSTORE,STORE
+	WHERE NUM = @NUM AND STOREGID = GID
+	     AND GID <> @VSTORE 	
+	OPEN Cur_PrombSnd
+	fetch next from Cur_PrombSnd into @StoreGid
+	while @@fetch_status = 0
+	BEGIN
+		EXEC @VRET = SENDONEPROMB @NUM, @VSTORE, @StoreGid, @MSG
+		IF @VRET <> 0 RETURN(1)
+		fetch next from Cur_PrombSnd into @StoreGid
+	END
+	CLOSE Cur_PrombSnd
+	DEALLOCATE Cur_PrombSnd
+	UPDATE PROMB SET SNDTIME = getdate(), LSTUPDTIME = getdate()
+		WHERE NUM = @NUM;
+	RETURN(0)
+END
+GO

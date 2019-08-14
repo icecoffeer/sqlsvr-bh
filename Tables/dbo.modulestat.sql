@@ -1,0 +1,10 @@
+CREATE TABLE [dbo].[modulestat]
+(
+[NO] [int] NOT NULL,
+[ACTNAME] [char] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[STATNAME] [char] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[SHORTCUT] [char] (1) COLLATE Chinese_PRC_CI_AS NULL,
+[ICONINDEX16] [int] NULL,
+[ICONINDEX32] [int] NULL
+) ON [PRIMARY]
+GO

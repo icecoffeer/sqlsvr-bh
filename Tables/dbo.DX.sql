@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[DX]
+(
+[CODE] [char] (13) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[TAG] [int] NULL
+) ON [PRIMARY]
+GO

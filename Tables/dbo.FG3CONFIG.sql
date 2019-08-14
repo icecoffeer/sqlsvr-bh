@@ -1,0 +1,11 @@
+CREATE TABLE [dbo].[FG3CONFIG]
+(
+[FileName] [varchar] (40) COLLATE Chinese_PRC_CI_AS NOT NULL CONSTRAINT [DF__FG3CONFIG__FileN__76E0E7BB] DEFAULT ('HDFG31'),
+[SecName] [varchar] (30) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[CfgName] [varchar] (40) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[CfgValue] [varchar] (100) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[Note] [varchar] (200) COLLATE Chinese_PRC_CI_AS NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[FG3CONFIG] ADD CONSTRAINT [PK__FG3Config__77D50BF4] PRIMARY KEY CLUSTERED  ([FileName], [SecName], [CfgName]) ON [PRIMARY]
+GO

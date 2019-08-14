@@ -1,0 +1,20 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+create procedure [dbo].[NMemberForAutoRcv]
+  @SRC int,
+  @ID int,
+  @ErrMSG VARCHAR(255) OUTPUT
+as
+begin
+	DECLARE @RESULT INT
+	SELECT @ERRMSG = ''
+	EXEC @RESULT = NMEMBERRCV @ID,@SRC
+	IF @RESULT <> 0
+	BEGIN
+		SELECT @ERRMSG = '调用过程NMENBERRCV出错!'
+	END
+	RETURN @RESULT
+end
+GO

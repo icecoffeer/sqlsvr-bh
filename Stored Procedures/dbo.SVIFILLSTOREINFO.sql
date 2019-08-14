@@ -1,0 +1,65 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[SVIFILLSTOREINFO](
+  @NUM VARCHAR(16),
+  @CSTORE INT,
+  @SPSTORE INT,  --是否按照门店分单
+  @p_isByStore INT,
+  @SNOTE VARCHAR(255) OUTPUT	
+)
+AS
+BEGIN
+  DECLARE @STCOUNT INT
+  DECLARE @TMPN VARCHAR(100)
+  --raiserror(@LNUM, 16, 1)
+  DELETE FROM SVIPayStoreDtl WHERE NUM = @NUM
+  IF @SPSTORE = 1
+  BEGIN
+    INSERT INTO SVIPayStoreDtl (NUM, STOREGID, CLS) VALUES (@NUM, @CSTORE, '代销')
+    SELECT @SNOTE = RTRIM(NAME) + '[' + RTRIM(CODE) + ']' FROM STORE WHERE GID = @CSTORE
+    SELECT @SNOTE = @SNOTE + '1家门店,'
+  END
+  ELSE
+  BEGIN
+    IF @p_isByStore = 1
+    BEGIN 
+      INSERT INTO SVIPayStoreDtl (NUM, STOREGID, CLS) SELECT @NUM, GID, '代销' FROM #STORE
+      SELECT @STCOUNT = COUNT(*) FROM #STORE
+      IF @STCOUNT > 0 
+      BEGIN
+        SELECT @SNOTE = RTRIM(NAME) + '[' + RTRIM(CODE) + ']' FROM STORE 
+            WHERE GID = (SELECT MIN(GID) FROM #STORE)
+        IF @STCOUNT > 1 
+        BEGIN
+          SELECT @TMPN = RTRIM(NAME) + '[' + RTRIM(CODE) + ']' FROM STORE 
+              WHERE GID = (SELECT MAX(GID) FROM #STORE)
+          SELECT @SNOTE = @SNOTE + '到' +@TMPN + '等' + RTRIM(CAST(@STCOUNT AS VARCHAR(8))) + '家门店,'
+        END
+        ELSE
+          SELECT @SNOTE = @SNOTE + '1家门店,'
+      END
+    END
+    ELSE
+    BEGIN
+      INSERT INTO SVIPayStoreDtl (NUM, STOREGID, CLS) SELECT @NUM, GID, '代销' FROM STORE
+      SELECT @STCOUNT = COUNT(*) FROM STORE
+      IF @STCOUNT > 0 
+      BEGIN
+        SELECT @SNOTE = RTRIM(NAME) + '[' + RTRIM(CODE) + ']' FROM STORE 
+            WHERE GID = (SELECT MIN(GID) FROM STORE)
+        IF @STCOUNT > 1 
+        BEGIN
+          SELECT @TMPN = RTRIM(NAME) + '[' + RTRIM(CODE) + ']' FROM STORE 
+              WHERE GID = (SELECT MAX(GID) FROM STORE)
+          SELECT @SNOTE = @SNOTE + '到' +@TMPN + '等' + RTRIM(CAST(@STCOUNT AS VARCHAR(8))) + '家门店,'
+        END
+        ELSE
+          SELECT @SNOTE = @SNOTE + '1家门店,'
+      END
+    END
+  END
+  RETURN 0
+END
+GO

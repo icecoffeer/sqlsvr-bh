@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[VDRAGMTLOG]
+(
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[CLS] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[STAT] [smallint] NOT NULL,
+[MODIFIER] [char] (30) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[TIME] [datetime] NOT NULL
+) ON [PRIMARY]
+GO

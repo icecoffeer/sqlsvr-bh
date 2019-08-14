@@ -1,0 +1,12 @@
+CREATE TABLE [dbo].[STOREEQP]
+(
+[STOREGID] [int] NOT NULL,
+[EQPTYPE] [int] NOT NULL,
+[VDRCODE] [varchar] (15) COLLATE Chinese_PRC_CI_AS NULL,
+[EQPCODE] [varchar] (15) COLLATE Chinese_PRC_CI_AS NULL,
+[EQPNAME] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[EQPMODE] [varchar] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[EQPQTY] [int] NOT NULL,
+[EQPRENT] [decimal] (24, 2) NULL
+) ON [PRIMARY]
+GO

@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[CUSTOMERORDERCARDINFO]
+(
+[FLOWNO] [char] (12) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[POSNO] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[CARDCODE] [char] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[SCORE] [decimal] (24, 4) NULL,
+[CARDTYPE] [char] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[CARDGID] [int] NULL,
+[OLDSCORE] [decimal] (24, 4) NULL,
+[ValidDate] [datetime] NULL,
+[SCOREINFO] [char] (256) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

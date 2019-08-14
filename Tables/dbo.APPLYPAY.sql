@@ -1,0 +1,33 @@
+CREATE TABLE [dbo].[APPLYPAY]
+(
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[RECCNT] [int] NOT NULL,
+[IMMOB] [decimal] (24, 2) NULL,
+[DEDUCT] [decimal] (24, 2) NULL,
+[ALLDEDUCT] [decimal] (24, 2) NULL,
+[CONCEDEAMT] [decimal] (24, 2) NULL,
+[CONCEDETAX] [decimal] (24, 2) NULL,
+[CONCEDETOTAL] [decimal] (24, 2) NULL,
+[BEGINBALANCE] [decimal] (24, 2) NULL,
+[ALLSTOCK] [decimal] (24, 2) NULL,
+[SUBPENAAMT] [decimal] (24, 2) NULL,
+[BEGINNOBALANCE] [decimal] (24, 2) NULL,
+[ALLSELL] [decimal] (24, 2) NULL,
+[VDRSENDAMT] [decimal] (24, 2) NULL,
+[STOCK] [decimal] (24, 2) NULL,
+[ALLPAY] [decimal] (24, 2) NULL,
+[ADJAMT] [decimal] (24, 2) NULL,
+[SELL] [decimal] (24, 2) NULL,
+[APPLYPAY] [decimal] (24, 2) NULL,
+[AFTERADJAMT] [decimal] (24, 2) NULL,
+[SHOULDPAY] [decimal] (24, 2) NULL,
+[REALPAY] [decimal] (24, 2) NULL,
+[ENDBALANCE] [decimal] (24, 2) NULL,
+[ENDNOBALANCE] [decimal] (24, 2) NULL,
+[ITAX] [decimal] (24, 2) NULL,
+[CIRCLEDAYS] [int] NULL,
+[VOUCHERNO] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[PAYBANK] [varchar] (60) COLLATE Chinese_PRC_CI_AS NULL,
+[NOTE] [varchar] (1000) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

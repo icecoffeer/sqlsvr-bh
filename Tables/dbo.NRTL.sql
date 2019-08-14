@@ -1,0 +1,40 @@
+CREATE TABLE [dbo].[NRTL]
+(
+[PRNTIME] [datetime] NULL,
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[SETTLENO] [int] NOT NULL,
+[FILDATE] [datetime] NOT NULL,
+[STAT] [smallint] NOT NULL CONSTRAINT [DF__NRTL__STAT__657AF6D7] DEFAULT (0),
+[TOTAL] [decimal] (24, 4) NOT NULL,
+[TAX] [decimal] (24, 4) NOT NULL,
+[CHANGE] [decimal] (24, 4) NOT NULL,
+[FILLER] [int] NOT NULL,
+[UNDERTAKER] [int] NULL,
+[WARRANTOR] [int] NULL,
+[WRH] [int] NOT NULL,
+[DSPUNIT] [int] NOT NULL,
+[DSPWRH] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[PROVIDER] [int] NOT NULL,
+[MODNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[INVNO] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[NOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[RECCNT] [int] NOT NULL,
+[SENDER] [int] NULL,
+[CHECKER] [int] NULL,
+[ASSISTANT] [int] NULL,
+[PAYSTAT] [smallint] NULL CONSTRAINT [DF__NRTL__PAYSTAT__666F1B10] DEFAULT (0),
+[SRCNUM] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[SRC] [int] NOT NULL,
+[SNDDATE] [datetime] NULL,
+[ID] [int] NOT NULL,
+[RCV] [int] NOT NULL,
+[RCVTIME] [datetime] NULL,
+[NTYPE] [smallint] NOT NULL,
+[NSTAT] [smallint] NOT NULL,
+[NNOTE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[GFTPRO] [int] NULL,
+[GFTPROWRH] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NRTL] ADD CONSTRAINT [PK__NRTL__67633F49] PRIMARY KEY CLUSTERED  ([ID], [SRC]) ON [PRIMARY]
+GO

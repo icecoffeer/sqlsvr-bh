@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[BPCKPOOL2]
+(
+[GDGID] [int] NOT NULL,
+[LINE] [int] NOT NULL
+) ON [PRIMARY]
+GO

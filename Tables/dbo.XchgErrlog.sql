@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[XchgErrlog]
+(
+[STORECODE] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[SERVERID] [int] NOT NULL,
+[PROCESSORID] [int] NOT NULL,
+[ERRTIME] [datetime] NOT NULL CONSTRAINT [DF__XchgErrlo__ERRTI__3D35994E] DEFAULT (getdate()),
+[MSG] [varchar] (255) COLLATE Chinese_PRC_CI_AS NOT NULL
+) ON [PRIMARY]
+GO

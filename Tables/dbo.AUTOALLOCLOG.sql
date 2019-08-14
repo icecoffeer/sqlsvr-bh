@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[AUTOALLOCLOG]
+(
+[STOREGID] [int] NOT NULL,
+[CLS] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[OPER] [int] NOT NULL,
+[ATIME] [datetime] NOT NULL
+) ON [PRIMARY]
+GO

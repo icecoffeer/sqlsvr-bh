@@ -1,0 +1,21 @@
+CREATE TABLE [dbo].[NPROCEXECPROD]
+(
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[LINE] [int] NOT NULL,
+[PSCPCODE] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[PSCPQTY] [decimal] (24, 4) NULL,
+[GDGID] [int] NOT NULL,
+[QTY] [decimal] (24, 4) NOT NULL,
+[TOTAL] [decimal] (24, 4) NULL,
+[CSTPRC] [decimal] (24, 4) NULL,
+[INPRC] [decimal] (24, 4) NULL,
+[RTLPRC] [decimal] (24, 4) NULL,
+[GENQTY] [decimal] (24, 4) NULL,
+[WRH] [int] NOT NULL,
+[PSCPGID] [int] NOT NULL,
+[SRC] [int] NOT NULL,
+[ID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NPROCEXECPROD] ADD CONSTRAINT [PK__NPROCEXECPROD__48BF87EF] PRIMARY KEY CLUSTERED  ([SRC], [ID], [LINE]) ON [PRIMARY]
+GO

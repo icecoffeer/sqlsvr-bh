@@ -1,0 +1,9 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE VIEW [dbo].[MR_VIEWSUBSTORE](	
+		code,
+		name	
+	) AS SELECT code,name FROM viewsubstore
+GO

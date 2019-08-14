@@ -1,0 +1,29 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[RCVCHKPrmOffsetAgm]
+(
+  @SRC       INT,
+  @ID        INT,
+  @CLS      VARCHAR(10),
+  @OPER      VARCHAR(30),
+  @MSG       VARCHAR(255) OUTPUT
+)
+AS
+BEGIN
+  DECLARE
+    @RET INT
+
+  SET @RET = 0
+  SELECT @RET = COUNT(1) FROM NPrmOffsetAgmDTL(NOLOCK)
+  WHERE SRC = @SRC AND ID = @ID AND GDGID <> -1 AND GDGID NOT IN (SELECT NGID FROM GDXLATE(NOLOCK))
+
+  IF @RET <> 0
+  begin
+   select @MSG = '本地未包含ID号' + CONVERT(VARCHAR(10), @ID )+ '单据的商品资料。请先下载商品资料，再下载网络促销补差协议！'
+   RETURN 1
+  end;
+  RETURN 0
+END
+GO

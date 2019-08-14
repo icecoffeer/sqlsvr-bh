@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[WRTASKOPTION]
+(
+[AKEY1] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[AKEY2] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[AKEY3] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[AVALUE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[ANOTE] [varchar] (255) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

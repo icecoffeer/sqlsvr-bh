@@ -1,0 +1,10 @@
+CREATE TABLE [dbo].[tmpGDHLInv]
+(
+[CODE] [char] (13) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[LOWINV] [money] NULL,
+[HIGHINV] [money] NULL,
+[ID] [int] NULL,
+[AUTOORD] [smallint] NULL CONSTRAINT [DF__tmpGDHLIn__AUTOO__631DAD19] DEFAULT (0),
+[NOAUTOORDREASON] [varchar] (4) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

@@ -1,0 +1,19 @@
+CREATE TABLE [dbo].[NBCKDMDDTL]
+(
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[LINE] [int] NOT NULL,
+[GDGID] [int] NOT NULL,
+[CASES] [decimal] (24, 4) NULL,
+[QTY] [decimal] (24, 4) NULL,
+[DMDCASES] [decimal] (24, 4) NULL,
+[DMDQTY] [decimal] (24, 4) NULL,
+[NOTE] [varchar] (255) COLLATE Chinese_PRC_CI_AS NULL,
+[SRC] [int] NOT NULL,
+[ID] [int] NOT NULL,
+[INV] [money] NOT NULL CONSTRAINT [DF__NBCKDMDDTL__INV__4A9A8164] DEFAULT (0),
+[CHECKED] [smallint] NULL,
+[bckedqty] [decimal] (24, 4) NULL CONSTRAINT [DF__nbckdmddt__bcked__0EF07708] DEFAULT (0)
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NBCKDMDDTL] ADD CONSTRAINT [PK__NBCKDMDDTL__27BB597B] PRIMARY KEY CLUSTERED  ([SRC], [ID], [LINE]) ON [PRIMARY]
+GO

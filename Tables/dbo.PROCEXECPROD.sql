@@ -1,0 +1,19 @@
+CREATE TABLE [dbo].[PROCEXECPROD]
+(
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[LINE] [int] NOT NULL,
+[PSCPCODE] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[PSCPQTY] [decimal] (24, 4) NULL,
+[GDGID] [int] NOT NULL,
+[QTY] [decimal] (24, 4) NOT NULL,
+[TOTAL] [decimal] (24, 4) NULL,
+[CSTPRC] [decimal] (24, 4) NULL,
+[INPRC] [decimal] (24, 4) NULL,
+[RTLPRC] [decimal] (24, 4) NULL,
+[GENQTY] [decimal] (24, 4) NULL,
+[WRH] [int] NOT NULL,
+[PSCPGID] [int] NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[PROCEXECPROD] ADD CONSTRAINT [PK__PROCEXECPROD__3167214B] PRIMARY KEY CLUSTERED  ([NUM], [LINE]) ON [PRIMARY]
+GO

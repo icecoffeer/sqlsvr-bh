@@ -1,0 +1,41 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[RCVCHKPROM]
+(
+  @SRC       INT,
+  @ID        INT,
+  @CLS      VARCHAR(10),
+  @OPER      VARCHAR(30),
+  @MSG       VARCHAR(255) OUTPUT
+)
+AS
+BEGIN
+  DECLARE
+    @RET INT
+
+  SET @RET = 0
+
+
+  SELECT @RET = COUNT(*)
+  FROM NPROMGOODS(NOLOCK)
+  WHERE SRC = @SRC AND ID = @ID AND GDGID <> -1 AND GDGID NOT IN (SELECT NGID FROM GDXLATE(NOLOCK))
+
+  IF @RET <> 0
+  begin
+   select @MSG = '本地未包含ID号' + CONVERT(VARCHAR(10), @ID )+ '单据的商品资料。请先下载商品资料，再下载网络' + @CLS + '促销单！'
+   RETURN 1
+  end;
+  SELECT @RET = COUNT(*)
+  FROM NPROMGFT(NOLOCK)
+  WHERE SRC = @SRC AND ID = @ID AND GFTGID NOT IN (SELECT NGID FROM GDXLATE(NOLOCK))
+
+  IF @RET <> 0
+  begin
+   select @MSG = '本地未包含ID号' + CONVERT(VARCHAR(10), @ID )+ '单据的赠品资料。请先下载商品资料，再下载网络' + @CLS + '促销单！'
+   RETURN 1
+  end;
+  RETURN 0
+END
+GO

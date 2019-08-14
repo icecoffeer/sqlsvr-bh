@@ -1,0 +1,56 @@
+SET QUOTED_IDENTIFIER OFF
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[INCREASEASCIISTRING]
+(
+  @STR VARCHAR(255) OUTPUT
+)
+AS
+BEGIN
+  DECLARE
+    @LEN INT,
+    @I INT,
+    @CARRY INT,
+    @ABN VARCHAR(255)
+
+  SET @STR = LTRIM(RTRIM(@STR))
+  IF @STR = ''
+  BEGIN
+    SET @STR = '1'
+    RETURN
+  END
+
+  SET @ABN = UPPER(@STR)
+  EXEC REVERSESTR @ABN OUTPUT
+  SET @LEN = LEN(@ABN)
+  SET @I = 1
+  SET @CARRY = 1
+  WHILE (@CARRY = 1) AND (@I <= @LEN)
+  BEGIN
+    IF SUBSTRING(@ABN, @I, 1) = 'Z'
+    BEGIN
+      SET @ABN = STUFF(@ABN, @I, 1, 'A')
+      SET @I = @I + 1
+    END ELSE IF SUBSTRING(@ABN, @I, 1) = '9'
+    BEGIN
+      SET @ABN = STUFF(@ABN, @I, 1, '0')
+      SET @I = @I + 1
+    END ELSE BEGIN
+      SET @ABN = STUFF(@ABN, @I, 1, CHAR(ASCII(SUBSTRING(@ABN, @I, 1)) + 1))
+      SET @CARRY = 0
+    END
+  END
+  IF @I > @LEN
+  BEGIN
+    IF SUBSTRING(@ABN, @LEN, 1) = 'A'
+      SET @ABN = @ABN + 'A'
+   ELSE
+      SET @ABN = @ABN + '1'
+   SET @LEN = @LEN + 1
+  END
+  IF @LEN > 10 SET @ABN = SUBSTRING(@ABN, 1, 10)
+  EXEC REVERSESTR @ABN OUTPUT
+  SET @STR = @ABN
+END
+GO

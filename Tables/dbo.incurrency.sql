@@ -1,0 +1,7 @@
+CREATE TABLE [dbo].[incurrency]
+(
+[name] [char] (30) COLLATE Chinese_PRC_CI_AS NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[incurrency] ADD CONSTRAINT [PK__incurrency__6FE04955] PRIMARY KEY CLUSTERED  ([name]) WITH (FILLFACTOR=90) ON [PRIMARY]
+GO

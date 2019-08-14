@@ -1,0 +1,34 @@
+CREATE TABLE [dbo].[NRTLDTL]
+(
+[NUM] [char] (10) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[LINE] [smallint] NOT NULL,
+[SETTLENO] [int] NOT NULL,
+[GDGID] [int] NOT NULL,
+[CASES] [decimal] (24, 4) NULL,
+[QTY] [decimal] (24, 4) NOT NULL,
+[PRICE] [decimal] (24, 4) NOT NULL,
+[DISCOUNT] [decimal] (24, 4) NOT NULL CONSTRAINT [DF__NRTLDTL__DISCOUN__694B87BB] DEFAULT (100),
+[INPRICE] [decimal] (24, 4) NULL,
+[ALCPRC] [decimal] (24, 4) NULL,
+[AMOUNT] [decimal] (24, 4) NOT NULL,
+[RTLPRC] [decimal] (24, 4) NOT NULL,
+[INPRC] [decimal] (24, 4) NOT NULL,
+[SUBWRH] [int] NULL,
+[DSPSUBWRH] [char] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[TAX] [decimal] (24, 4) NOT NULL,
+[LXGDNAME] [char] (50) COLLATE Chinese_PRC_CI_AS NULL,
+[LXGDSPEC] [char] (40) COLLATE Chinese_PRC_CI_AS NULL,
+[LXGDMUNIT] [char] (6) COLLATE Chinese_PRC_CI_AS NULL,
+[LXGDTM] [char] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[INVAMT] [decimal] (24, 4) NULL,
+[COST] [decimal] (24, 4) NOT NULL CONSTRAINT [DF__NRTLDTL__COST__6A3FABF4] DEFAULT (0),
+[SRC] [int] NOT NULL,
+[ID] [int] NOT NULL,
+[REDCARDCOST] [decimal] (24, 4) NULL,
+[BLUECARDCOST] [decimal] (24, 4) NULL,
+[VOUAMT] [money] NULL,
+[GFTFLAG] [int] NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[NRTLDTL] ADD CONSTRAINT [PK__NRTLDTL__6B33D02D] PRIMARY KEY CLUSTERED  ([ID], [LINE]) ON [PRIMARY]
+GO

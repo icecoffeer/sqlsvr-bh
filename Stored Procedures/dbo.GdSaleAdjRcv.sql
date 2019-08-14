@@ -1,0 +1,157 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[GdSaleAdjRcv]
+(
+  @BILL_ID INT,
+  @SRC_ID INT,
+  @OPER CHAR(30),
+  @MSG VARCHAR(255) OUTPUT
+) --WITH ENCRYPTION
+AS
+BEGIN
+	DECLARE
+		@CUR_SETTLENO INT,      @STAT SMALLINT,     @RCV_GID INT,
+		@NET_STAT SMALLINT,     @NET_TYPE SMALLINT, @NUM CHAR(14),
+		@NET_NUM CHAR(14),      @NET_BILLID INT,    @PRE_NUM CHAR(14),  
+		@USERGID INT,           @BILLTO INT,        @FRCCHK INT,
+		@EON INT
+	DECLARE 
+		@PSR INT, @WRH INT, @LINE INT, @ERET INT
+	SET @WRH = 1
+	SET @ERET = 0
+	SET @EON = 1
+	--Exec OptReadInt 594, 'XXX', 1, @XXX Output
+	SELECT @CUR_SETTLENO = MAX(NO) from MONTHSETTLE
+	SELECT  @RCV_GID = RCV, @NET_STAT = STAT, @NET_TYPE = TYPE, 
+		 @NET_NUM = NUM, @FRCCHK = FRCCHK
+	FROM NGdSaleAdj WHERE ID = @BILL_ID AND SRC = @SRC_ID
+	SELECT @USERGID = USERGID FROM SYSTEM
+	IF @@ROWCOUNT = 0 OR @NET_NUM is null
+	begin
+		SET @MSG = '该单据不存在'
+		return(1)
+	end
+	if @net_type <> 1
+	begin
+		SET @MSG = '该单据不在接收缓冲区中'
+		return(1)
+	end
+	if @USERGID <>  @rcv_gid
+	begin
+	  	update nGdSaleAdj set nstat = 1 ,nnote = '该单据的接收单位不是本单位'
+	  					where src = @src_id and id = @bill_id
+		SET @MSG = '该单据的接收单位不是本单位'
+		return(1)
+	end
+	--检查员工对照表 MST
+	SELECT @PSR = PSR FROM NGdSaleAdj WHERE SRC = @SRC_ID AND ID = @BILL_ID
+	IF NOT EXISTS( SELECT CODE FROM EMPLOYEE WHERE GID = @PSR )
+	BEGIN
+	  IF EXISTS( SELECT LGID FROM EMPXLATE WHERE NGID = @PSR )
+	  	SELECT @PSR = LGID FROM EMPXLATE WHERE NGID = @PSR
+	  ELSE
+	  BEGIN
+	  	UPDATE NGdSaleAdj SET NSTAT = 1 ,NNOTE = '本地找不到采购员对应的员工(对照表中也不存在)'
+	  					WHERE SRC = @SRC_ID AND ID = @BILL_ID
+	  	SET @MSG = '本地找不到采购员对应的员工(对照表中也不存在)'
+		RETURN(1)	
+	  END	
+	END
+	--商品是否已经存在
+	IF @NET_STAT in (100, 800)
+	BEGIN
+		IF EXISTS( SELECT 1 FROM NGdSaleAdjDTL DTL WHERE SRC = @SRC_ID AND ID = @BILL_ID
+					AND DTL.GDGID NOT IN (SELECT GID FROM GOODS (NOLOCK) ) )
+		BEGIN
+		  	UPDATE NGdSaleAdj SET NSTAT = 1 ,NNOTE = '有不存在的商品，不能接收'
+		  					WHERE SRC = @SRC_ID AND ID = @BILL_ID
+		  	SET @MSG = '有不存在的商品，不能接收'
+			RETURN(1)
+		END
+	END
+	ELSE
+	BEGIN
+	  	UPDATE NGdSaleAdj SET NSTAT = 1 ,NNOTE = '非生效状态单据不能接收'
+	  					WHERE SRC = @SRC_ID AND ID = @BILL_ID
+	  	SET @MSG = '非生效状态单据不能接收'
+		RETURN(1)
+	END
+	
+	--本地有对应单据
+	IF (SELECT COUNT(*) FROM GdSaleAdj A,NGdSaleAdj B WHERE A.NUM = B.NUM   
+		AND B.ID = @BILL_ID AND B.SRC = @SRC_ID) <> 0  
+	BEGIN
+        SELECT @STAT = A.STAT, @NUM = A.NUM
+        FROM GdSaleAdj A,NGdSaleAdj B 
+        WHERE A.NUM = B.NUM AND B.ID = @BILL_ID AND B.SRC = @SRC_ID
+        IF @STAT <> 0 AND @STAT <> 1600 -- (@NET_STAT = 1200)
+        BEGIN
+		  	UPDATE NGdSaleAdj SET NSTAT = 1 ,NNOTE = '单据已经接收并审核' 
+ 				WHERE SRC = @SRC_ID AND ID = @BILL_ID
+        	SET @MSG = '单据已经接收并审核:' + @Num
+			RETURN(1)
+        END
+        ELSE
+        BEGIN
+            DELETE FROM GdSaleAdj WHERE NUM = @NUM
+        	DELETE FROM GdSaleAdjDTL WHERE NUM = @NUM
+        	--DELETE FROM GdSaleAdjLAC WHERE NUM = @NUM
+        END
+	END
+    --开始接收	
+	IF @NET_STAT IN (100, 800) 
+	BEGIN
+		SET @STAT = 0
+		INSERT INTO GdSaleAdj (NUM, STAT, SETTLENO, SRC, PSR, 
+		    FILDATE, FILLER, CHECKER, CHKDATE, LAUNCH, LSTUPDTIME, PRNTIME, 
+		    SNDTIME, EON, NOTE, RECCNT)
+        SELECT  NUM, @STAT, @CUR_SETTLENO, SRC, PSR, 
+		    FILDATE, FILLER, CHECKER, CHKDATE, LAUNCH, GETDATE(), PRNTIME, 
+		    SNDTIME, @EON, NOTE, RECCNT
+        FROM NGdSaleAdj
+		WHERE SRC = @SRC_ID AND ID = @BILL_ID
+		
+   		INSERT INTO GdSaleAdjDTL (NUM, LINE, SETTLENO, GDGID, 
+   		    OLDGDSALE, NEWGDSALE, NEWPAYRATE, CHGFLAG, CHGFROMDATE, NOTE)
+        SELECT NUM, LINE, @CUR_SETTLENO, GDGID, 
+   		    OLDGDSALE, NEWGDSALE, NEWPAYRATE, CHGFLAG, CHGFROMDATE, NOTE
+   		FROM NGdSaleAdjDTL
+		WHERE SRC = @SRC_ID AND ID = @BILL_ID
+		
+		/*INSERT INTO GdSaleAdjLAC(NUM, STOREGID)
+		SELECT NUM, STOREGID FROM NGdSaleAdjLAC
+		WHERE SRC = @SRC_ID AND ID = @BILL_ID*/
+		IF @@ERROR <> 0 
+		BEGIN
+		  	UPDATE NGdSaleAdj SET NSTAT = 1 ,NNOTE = '接收'+@NET_NUM+'单据失败'
+  				WHERE SRC = @SRC_ID AND ID = @BILL_ID
+			SET @MSG = '接收'+@NET_NUM+'单据失败'
+			RETURN(1)
+		END	
+		IF @STAT = 0 AND @FRCCHK = 1  --审核
+		BEGIN
+		    EXEC @ERET = GdSaleAdjCHK @NET_NUM, @OPER, '', 100, @MSG OUTPUT
+		    IF @ERET<>0
+		        RETURN @ERET
+		END
+	END
+	ELSE
+	BEGIN
+	  	UPDATE NGdSaleAdj SET NSTAT = 1 ,NNOTE = '网络单据状态非审核和生效状态' 
+			WHERE SRC = @SRC_ID AND ID = @BILL_ID
+		SET @MSG = '接收'+@NET_NUM+'网络单据状态非审核和生效状态'
+		RETURN(1)
+	END
+	DELETE FROM NGdSaleAdj WHERE ID = @BILL_ID AND SRC = @SRC_ID
+	DELETE FROM NGdSaleAdjDTL WHERE ID = @BILL_ID AND SRC = @SRC_ID
+	--DELETE FROM NGdSaleAdjLAC WHERE ID = @BILL_ID AND SRC = @SRC_ID
+	EXEC GdSaleAdjADDLOG @NET_NUM,@NET_STAT,'接收',@OPER	
+	insert into LOG(TIME, EMPLOYEECODE, WORKSTATIONNO, MODULENAME,
+    TYPE, CONTENT) 
+    values (getdate(), substring(@OPER, CHARINDEX('[', @OPER)+1, CHARINDEX(']',@OPER) - CHARINDEX('[',@OPER)-1), '',
+    'GdSaleAdj', 304, '接收营销方式调整单:['+@NUM+']' )
+	RETURN(0)
+END
+GO

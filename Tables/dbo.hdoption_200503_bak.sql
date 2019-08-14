@@ -1,0 +1,8 @@
+CREATE TABLE [dbo].[hdoption_200503_bak]
+(
+[MODULENO] [int] NOT NULL,
+[OPTIONCAPTION] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[OPTIONVALUE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[NOTE] [varchar] (255) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

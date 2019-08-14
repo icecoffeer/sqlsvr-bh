@@ -1,0 +1,32 @@
+CREATE TABLE [dbo].[JxcKc]
+(
+[Code] [char] (13) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[GrpNo] [char] (6) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[JPrice] [money] NULL,
+[Price] [money] NULL,
+[HyPrice] [money] NULL,
+[PfPrice] [money] NULL,
+[Supply] [char] (8) COLLATE Chinese_PRC_CI_AS NULL,
+[GJxCount] [decimal] (8, 2) NULL,
+[GDxCount] [decimal] (8, 2) NULL,
+[GJxCost] [money] NULL,
+[GDxCost] [money] NULL,
+[GJxTotal] [money] NULL,
+[GDxTotal] [money] NULL,
+[SJxCount] [decimal] (8, 2) NULL,
+[SDxCount] [decimal] (8, 2) NULL,
+[SJxCost] [money] NULL,
+[SDxCost] [money] NULL,
+[SJxTotal] [money] NULL,
+[SDxTotal] [money] NULL,
+[XJxCount] [decimal] (8, 2) NULL,
+[XJxCost] [money] NULL,
+[XJxTotal] [money] NULL,
+[XDxCount] [decimal] (8, 2) NULL,
+[XDxCost] [money] NULL,
+[XDxTotal] [money] NULL,
+[JTaxRate] [smallint] NULL,
+[XTaxRate] [smallint] NULL,
+[JhPerson] [char] (8) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO

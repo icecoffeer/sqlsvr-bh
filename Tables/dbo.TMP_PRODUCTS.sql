@@ -1,0 +1,29 @@
+CREATE TABLE [dbo].[TMP_PRODUCTS]
+(
+[spid] [int] NOT NULL,
+[FGDGID] [int] NOT NULL,
+[FCODE] [varchar] (13) COLLATE Chinese_PRC_CI_AS NULL,
+[FNAME] [varchar] (80) COLLATE Chinese_PRC_CI_AS NULL,
+[FVENDOR] [int] NULL,
+[FSPEC] [varchar] (40) COLLATE Chinese_PRC_CI_AS NULL,
+[FMUNIT] [varchar] (6) COLLATE Chinese_PRC_CI_AS NULL,
+[RTLPRC] [decimal] (24, 2) NULL,
+[SORT] [varchar] (13) COLLATE Chinese_PRC_CI_AS NULL,
+[FMEMO] [varchar] (255) COLLATE Chinese_PRC_CI_AS NULL,
+[FDISP] [varchar] (10) COLLATE Chinese_PRC_CI_AS NULL,
+[FCREATETIME] [datetime] NULL,
+[FCREATEOPER] [varchar] (30) COLLATE Chinese_PRC_CI_AS NULL,
+[FICONFILE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[FIMAGEFILE] [varchar] (100) COLLATE Chinese_PRC_CI_AS NULL,
+[FORDQTYSTEP] [decimal] (24, 2) NULL,
+[FCTRL] [int] NULL,
+[FALWALC] [int] NULL,
+[FSTOPPROVIDE] [int] NULL,
+[FELIMINATE] [int] NULL,
+[FICONLSTTIME] [datetime] NULL,
+[FIMAGELSTTIME] [datetime] NULL,
+[FOUTPRC] [decimal] (24, 2) NULL
+) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IDX_TMP_PRODUCTS_FGDGID] ON [dbo].[TMP_PRODUCTS] ([spid], [FGDGID]) ON [PRIMARY]
+GO

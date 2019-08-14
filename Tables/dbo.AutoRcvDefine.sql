@@ -1,0 +1,11 @@
+CREATE TABLE [dbo].[AutoRcvDefine]
+(
+[SerialNO] [int] NULL,
+[Subject] [char] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[SPName] [char] (40) COLLATE Chinese_PRC_CI_AS NOT NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AutoRcvDefine] ADD CONSTRAINT [PK__AutoRcvDefine__5A46D948] PRIMARY KEY CLUSTERED  ([Subject]) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AutoRcvDefine] ADD CONSTRAINT [UQ__AutoRcvDefine__5B3AFD81] UNIQUE NONCLUSTERED  ([SPName]) ON [PRIMARY]
+GO

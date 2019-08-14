@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[TEMPCONSUME]
+(
+[spid] [int] NOT NULL,
+[UUID] [varchar] (32) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[LINE] [int] NOT NULL,
+[CARDNUM] [varchar] (20) COLLATE Chinese_PRC_CI_AS NULL,
+[SCORE] [decimal] (24, 2) NULL,
+[FILDATE] [datetime] NULL,
+[NOTE] [varchar] (200) COLLATE Chinese_PRC_CI_AS NULL
+) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [idx_TEMPCONSUME_spid] ON [dbo].[TEMPCONSUME] ([spid]) ON [PRIMARY]
+GO

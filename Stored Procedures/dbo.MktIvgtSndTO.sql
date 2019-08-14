@@ -1,0 +1,64 @@
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE PROCEDURE [dbo].[MktIvgtSndTO]
+(
+  @NUM CHAR(14),
+  @SRC INT,
+  @RCV INT,
+  @MSG VARCHAR(255) OUTPUT   
+) 
+AS
+BEGIN
+  DECLARE @ID INT
+  
+  execute GETNETBILLID @id output
+
+-- 开始发送单据
+  INSERT INTO PSNMKTIVGT(ID, NUM, Stat, RATIFIER, SRC, IVGTOR, 
+      FILDATE, FILLER, REQOPER, REQDATE, CHECKER, CHKDATE, BEGINDATE,
+      LSTUPDTIME, PRNTIME, SNDTIME, SETTLENO, NOTE, RECCNT, OCRSTORE, ADDR,
+      RCV, RCVTIME, NTYPE, NSTAT, NNOTE)
+  SELECT @ID, Num, Stat, RATIFIER, SRC, IVGTOR, 
+      FILDATE, FILLER, REQOPER, REQDATE, CHECKER, CHKDATE, BEGINDATE,
+      LSTUPDTIME, PRNTIME, SNDTIME, SETTLENO, NOTE, RECCNT, OCRSTORE, ADDR,
+      @RCV, GETDATE(), 0, 0, NULL
+  FROM PSMKTIVGT 
+  WHERE NUM = @NUM
+  IF @@ERROR <> 0 
+  BEGIN
+    SET @MSG = '发送'+@NUM+'单据失败'
+    RETURN(1)
+  END
+  
+  INSERT INTO PSNMKTIVGTDTL(ID, Src, Num, Line, Flag, ObjCode, ObjName, 
+       TypeCCode, TypeName, Note, RCV)
+  SELECT  @ID, @Src, Num, Line, Flag, ObjCode, ObjName, 
+       TypeCode, TypeName, Note, @RCV
+  FROM PSMKTIVGTDTL     
+  WHERE NUM = @NUM
+  IF @@ERROR <> 0 
+  BEGIN
+    SET @MSG = '发送'+@NUM+'单据失败'
+    RETURN(1)
+  END
+  
+  INSERT INTO PSNMKTIVGTDTLDTL(ID, Src, Num, Line, ItemNo, PropCode, PropName, Value,
+        RCV)
+  SELECT  @ID, @Src, Num, Line, ItemNo, PropCode, PropName, Value, @RCV 
+  FROM PSMKTIVGTDTLDTL      
+  WHERE NUM = @NUM
+  IF @@ERROR <> 0 
+  BEGIN
+    SET @MSG = '发送'+@NUM+'单据失败'
+    RETURN(1)
+  END
+
+--更新本地表发送时间
+  UPDATE PSMKTIVGT
+  SET SNDTIME = GETDATE()
+  WHERE NUM = @NUM
+  
+END
+GO

@@ -1,0 +1,13 @@
+CREATE TABLE [dbo].[TALLYORD]
+(
+[STOREGID] [int] NOT NULL,
+[NUM] [char] (14) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[DMDDATE] [datetime] NOT NULL,
+[ORDTIME] [datetime] NOT NULL,
+[GDGID] [int] NOT NULL,
+[TALLYTYPE] [varchar] (4) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[QTY] [decimal] (24, 4) NOT NULL,
+[RCVTIME] [datetime] NULL CONSTRAINT [DF__TALLYORD__RCVTIM__3EF62693] DEFAULT (getdate()),
+[ALCTIME] [datetime] NULL
+) ON [PRIMARY]
+GO

@@ -1,0 +1,4 @@
+SET QUOTED_IDENTIFIER OFF
+GO
+create default [dbo].[DF__CTCNTRRAT__CALCM__12345678] as '合计'
+GO

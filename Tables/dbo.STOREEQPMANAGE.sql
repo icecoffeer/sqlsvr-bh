@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[STOREEQPMANAGE]
+(
+[GID] [int] NOT NULL IDENTITY(1, 1),
+[STOREGID] [int] NOT NULL,
+[CODE] [varchar] (15) COLLATE Chinese_PRC_CI_AS NULL,
+[NAME] [varchar] (50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+[AMT] [int] NOT NULL
+) ON [PRIMARY]
+GO
